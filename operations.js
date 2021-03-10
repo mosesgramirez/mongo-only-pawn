@@ -1,38 +1,24 @@
 // insert, find, update, remove docs (note CRUD parallel)
 
-const assert = require('assert').strict;
-
-exports.insertDocument = (db, document, collection, callback) => {
+exports.insertDocument = (db, document, collection) => {
     const coll = db.collection(collection);
-    coll.insertOne(document, (err, result) => {
-        assert.strictEqual(err, null);
-        callback(result);
-        // We'll define this callback later.
-    });
+    // note: we deleted the callback because the Node Driver API natively supports promises. insertOne will return a promise by default.
+    return coll.insertOne(document);
 };
 
-exports.findDocuments = (db, collection, callback) => {
+exports.findDocuments = (db, collection) => {
     const coll = db.collection(collection);
-    coll.find().toArray((err, docs) => {
-        assert.strictEqual(err, null);
-        callback(docs);
-    });
+    return coll.find().toArray();
 };
 
-exports.updateDocument = (db, document, update, collection, callback) => {
+exports.updateDocument = (db, document, update, collection) => {
     const coll = db.collection(collection);
     // $set lets MongoDB know that we want to overwrite
-    coll.updateOne(document, { $set: update }, null, (err, result) => {
-        assert.strictEqual(err, null);
-        callback(result);
-    });
+    return coll.updateOne(document, { $set: update }, null);
 };
 
-exports.removeDocument = (db, document, collection, callback) => {
+exports.removeDocument = (db, document, collection) => {
     const coll = db.collection(collection);
-    coll.deleteOne(document, (err, result) => {
-        assert.strictEqual(err, null);
-        callback(result);
-    });
+    return coll.deleteOne(document);
 };
 
